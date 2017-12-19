@@ -6,48 +6,24 @@
 </head><body>
 <h3>User Login Form</h3>
 <div class="row">
-    <form class="col s12">{% csrf_token %}
+    <form class="col s12" method="post">{% csrf_token %}
         <div class="row">
             <div class="input-field col s12">
-                <input id="user_mobile" type="text" class="validate">
+                <input id="user_mobile" name="user_mobile" type="text" class="validate" required>
                 <label for="user_name">Mobile number</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <input id="user_password" type="password" class="validate">
+                <input id="user_password" name="user_password" type="password" class="validate" required>
                 <label for="password">Password</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <input id="button" type="button" class="validate btn" onclick="user_login()" value="Submit"/>
+                <button id="button" type="submit" class="btn" >Submit</button>
             </div>
         </div>
     </form>
 </div>
-<script>
-    function user_login() {
-        var user_mobile = document.getElementById('user_mobile').value;
-        var password = document.getElementById('user_password').value;
-        if(user_mobile == "" || password == "" )
-        {
-            alert('User Mobile Or Password Should`nt be Empty');
-            document.getElementById('user_mobile').value ="";
-            document.getElementById('user_password').value ="";
-        }
-        else {
-            $.ajax({
-                type: 'POST',
-                url: '/',
-                data: {'mobile': user_mobile, 'password': password,},
-               success:function () {
-                    alert('User Created!!!')
-                }
-            });
-            console.log(user_mobile);
-            console.log(password);
-        }
-    }
-</script>
 </body></html>

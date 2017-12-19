@@ -1,4 +1,6 @@
-from django.http import HttpResponse, JsonResponse, request
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.http import HttpResponse, JsonResponse, request, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -24,23 +26,38 @@ def register(request):
             mobile=mobile,
             password=password
         )
+        User.objects.create(
+            username=str(mobile),
+            password=str(password),
+        )
         json = {'result': True}
         return JsonResponse(json)
 
 
-def login(request):
+@csrf_exempt
+def login_check(request):
     if request.method == 'GET':
         print ('inside login')
         return render(request, "login.html")
 
     if request.method == 'POST':
         print ('inside post method')
-        mobile = request.POST.get('mobile')
-        password = request.POST.get('password')
+        mobile = request.POST.get('user_mobile')
+        password = request.POST.get('user_password')
+        print (mobile)
+        print (password)
+        user = authenticate(username=str(mobile), password=str(password))
+        # user = user_data.objects.get(mobile=int(mobile))
+        print(user)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect('/home/')
+        else:
+            return HttpResponseRedirect('/login/')
 
-        user = user_data.objects.get(mobile=int(mobile))
-        print user
-        if user.password == password:
-            return JsonResponse(user)
 
-
+@csrf_exempt
+def home(request):
+    if request.method == 'GET':
+        print ('inside home')
+        return render(request, "home.html")
