@@ -1,12 +1,12 @@
-from django.contrib.auth import authenticate, login, logout
+import random
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse, request, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
-from student.models import user_data
+from student.models import user_data, user_otp
 
 
 @csrf_exempt
@@ -16,11 +16,9 @@ def register(request):
         return render(request, "register.html")
 
     if request.method == 'POST':
-        print ('inside post method')
         name = request.POST.get('name')
         mobile = request.POST.get('mobile')
         password = request.POST.get('password')
-        print (mobile)
         user_data.objects.create(
             username=name,
             mobile=mobile,
@@ -37,29 +35,22 @@ def register(request):
 @csrf_exempt
 def login_check(request):
     if request.method == 'GET':
-        print ('inside login')
         return render(request, "login.html")
 
     if request.method == 'POST':
-        print ('inside post method')
         mobile = request.POST.get('user_mobile')
         password = request.POST.get('user_password')
-        print (mobile)
-        print (password)
     try:
         get_user_data = User.objects.get(username=mobile, password=password)
+        request.session['mobile'] = 'mobile'
+        print ('session part')
+        session_mobile = request.session[mobile]
+        print (session_mobile)
     except Exception as e:
         print (e)
-    print ('get_user_data')
     if User.objects.filter(username=mobile, password=password).exists():
         login(request, get_user_data)
         return HttpResponseRedirect('/home/')
-    # print (get_user_data)
-    # user = authenticate(username=str(mobile), password=str(password))
-    # print(user)
-    # if user is not None:
-    #     login(request, user)
-    #     return HttpResponseRedirect('/home/')
     else:
         return HttpResponseRedirect('/login/')  # @csrf_exempt
 
@@ -85,3 +76,65 @@ def forgetPass(request):
     if request.method == 'GET':
         print ('inside forget Pass')
         return render(request, "forgetPass.html")
+
+    if request.method == 'POST':
+        print ('inside post method')
+        mobile = request.POST.get('mobile')
+        request.session['get_mobile'] = mobile
+        if User.objects.filter(username=mobile).exists():
+            otp = random.randint(10000, 99999)  # returns a random integer
+            mobile = request.POST.get('mobile')
+            user_otp.objects.create(
+                mobile=mobile,
+                otp=otp,
+            )
+            print (mobile)
+            print (otp)
+            result = {'response': True}
+            return JsonResponse(result)
+        else:
+            result = {'response': False}
+            return JsonResponse(result)
+
+
+@csrf_exempt
+def changePassword(request):
+    if request.method == 'GET':
+        print ('inside change Pass')
+        return render(request, "changePassword.html")
+
+    if request.method == 'POST':
+        password1 = request.POST.get('new_password1')
+        get_otp = request.POST.get('get_otp')
+        mobile = request.session['get_mobile']
+        print ('session check')
+        print (password1)
+        print (mobile)
+        print (get_otp)
+        try:
+            user_mobile_instance = user_otp.objects.filter(mobile=mobile).last()
+        except Exception as e:
+            print(e)
+
+        if user_mobile_instance.otp == int(get_otp):
+            get_user_object = User.objects.get(username=mobile,)
+            get_user_object.save()
+            return HttpResponseRedirect('/login/')
+        else:
+            print ('Wrong OTP')
+            return HttpResponseRedirect('/changePassword/')
+
+
+@csrf_exempt
+def resetPass(request):
+    if request.method == 'GET':
+        print ('inside Reset Pass')
+        return render(request, "resetPass.html")
+
+    # if request.method == 'POST':
+    #     print ('inside reset pass post')
+    #     password1 = request.POST.get('new_password1')
+    #     user.objects.get(
+    #         mobile=mobile,
+    #         password=password
+    #     )
