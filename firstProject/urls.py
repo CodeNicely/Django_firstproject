@@ -16,13 +16,15 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from student.views import register, login_check, home
+from student.views import register, login_check, home, forgetPass, log_out
 
-urlpatterns = [
+urlpatterns = {
     url(r'^admin/', admin.site.urls),
     url(r'^$', register),
     url(r'^login/$', login_check),
     url(r'^home/$', home),
-]
+    url(r'^forgetPass/$', forgetPass),
+    url(r'^logout/$', log_out),
+}
 
 
