@@ -113,28 +113,16 @@ def changePassword(request):
         print (get_otp)
         try:
             user_mobile_instance = user_otp.objects.filter(mobile=mobile).last()
+            print (get_otp)
         except Exception as e:
             print(e)
 
         if user_mobile_instance.otp == int(get_otp):
             get_user_object = User.objects.get(username=mobile,)
+            get_user_object.password = password1
             get_user_object.save()
             return HttpResponseRedirect('/login/')
         else:
             print ('Wrong OTP')
             return HttpResponseRedirect('/changePassword/')
 
-
-@csrf_exempt
-def resetPass(request):
-    if request.method == 'GET':
-        print ('inside Reset Pass')
-        return render(request, "resetPass.html")
-
-    # if request.method == 'POST':
-    #     print ('inside reset pass post')
-    #     password1 = request.POST.get('new_password1')
-    #     user.objects.get(
-    #         mobile=mobile,
-    #         password=password
-    #     )

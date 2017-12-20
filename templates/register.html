@@ -49,7 +49,7 @@
                 url:'/',
                 data:{'name':user_name,'mobile':mobile,'password':password,},
                 success:function () {
-                    alert('User Created!!!')
+                    Materialize.toast('Registration Successful!', 3000, 'rounded');
                     window.location.href = "login/";
                 }
             });

@@ -16,8 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from student.views import register, login_check, home, forgetPass, log_out, changePassword, resetPass
-
+from student.views import register, login_check, home, forgetPass, log_out, changePassword
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', register),
@@ -26,7 +25,6 @@ urlpatterns = [
     url(r'^forgetPass/$', forgetPass),
     url(r'^logout/$', log_out),
     url(r'^changePassword/$', changePassword),
-    url(r'^resetPass/$', resetPass),
 ]
 
 
