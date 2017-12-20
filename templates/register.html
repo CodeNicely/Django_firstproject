@@ -4,33 +4,59 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 </head><body>
-<h3>User Registration Form</h3>
-<div class="row">
-    <form class="col s12">{% csrf_token %}
-        <div class="row">
-            <div class="input-field col s6">
-                <input id="user_name" name="user_name" type="text" class="validate" required>
+<div class="section"></div>
+<main>
+    <center>
+        <img class="responsive-img" style="width: 250px;" src="http://susris.com/wp-content/uploads//2014/04/register-button-300x131.jpg" />
+        <div class="section"></div>
+
+
+        <div class="container">
+            <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+
+                <form class="col s12">{% csrf_token %}
+                    <div class='row'>
+                        <div class='col s12'>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='input-field col s12'>
+                            <input id="user_name" name="user_name" type="text" class="validate" required>
                 <label for="user_name">User Name</label>
-            </div>
-            <div class="input-field col s6">
-                <input id="user_mobile" name="user_mobile" type="number" class="validate" required>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='input-field col s12'>
+                <input id="user_mobile" name="user_mobile" type="number" class="validate" onKeyPress="if(this.value.length==10) return false;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                 <label for="user_mobile">Mobile number</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="user_password" name="user_password" type="password" class="validate" required>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='input-field col s12'>
+                            <input id="user_password" name="user_password" type="password" class="validate" required>
                 <label for="password">Password</label>
+                        </div>
+                    </div>
+                    <br />
+                    <center>
+                        <div class='row'>
+                           <input id="button" type="button" class="validate btn" value="REGISTER" onclick="get_details()"/>
+                        </div>
+                    </center>
+                </form>
+                 <br />
+                    <center>
+                        <div class='row'>
+                            &nbsp;&nbsp;&nbsp;Already have account <a href="login/">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                    </center>
             </div>
         </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="button" type="button" class="validate btn" value="Submit" onclick="get_details()"/>
-                &nbsp;&nbsp;&nbsp;Already have account <a href="login/">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            </div>
-        </div>
-    </form>
-</div>
+    </center>
+
+    <div class="section"></div>
+    <div class="section"></div>
+</main>
 <script>
     function get_details() {
         var user_name = document.getElementById('user_name').value;
@@ -42,6 +68,7 @@
             document.getElementById('user_name').value ="";
             document.getElementById('user_mobile').value ="";
             document.getElementById('user_password').value ="";
+             $('#user_name').focus();
         }
         else{
             $.ajax({

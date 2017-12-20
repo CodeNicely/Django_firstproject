@@ -12,9 +12,7 @@ from student.models import user_data, user_otp
 @csrf_exempt
 def register(request):
     if request.method == 'GET':
-        print ('inside if')
         return render(request, "register.html")
-
     if request.method == 'POST':
         name = request.POST.get('name')
         mobile = request.POST.get('mobile')
@@ -43,9 +41,7 @@ def login_check(request):
     try:
         get_user_data = User.objects.get(username=mobile, password=password)
         request.session['mobile'] = 'mobile'
-        print ('session part')
         session_mobile = request.session[mobile]
-        print (session_mobile)
     except Exception as e:
         print (e)
     if User.objects.filter(username=mobile, password=password).exists():
@@ -64,7 +60,6 @@ def log_out(request):
 @csrf_exempt
 def home(request):
     if request.method == 'GET':
-        print ('inside home')
         if request.user.is_authenticated:
             return render(request, "home.html")
         else:
@@ -74,22 +69,19 @@ def home(request):
 @csrf_exempt
 def forgetPass(request):
     if request.method == 'GET':
-        print ('inside forget Pass')
         return render(request, "forgetPass.html")
 
     if request.method == 'POST':
-        print ('inside post method')
         mobile = request.POST.get('mobile')
         request.session['get_mobile'] = mobile
         if User.objects.filter(username=mobile).exists():
             otp = random.randint(10000, 99999)  # returns a random integer
             mobile = request.POST.get('mobile')
+            print (otp)
             user_otp.objects.create(
                 mobile=mobile,
                 otp=otp,
             )
-            print (mobile)
-            print (otp)
             result = {'response': True}
             return JsonResponse(result)
         else:
@@ -100,7 +92,6 @@ def forgetPass(request):
 @csrf_exempt
 def changePassword(request):
     if request.method == 'GET':
-        print ('inside change Pass')
         return render(request, "changePassword.html")
 
     if request.method == 'POST':
@@ -108,9 +99,6 @@ def changePassword(request):
         get_otp = request.POST.get('get_otp')
         mobile = request.session['get_mobile']
         print ('session check')
-        print (password1)
-        print (mobile)
-        print (get_otp)
         try:
             user_mobile_instance = user_otp.objects.filter(mobile=mobile).last()
             print (get_otp)
@@ -118,11 +106,10 @@ def changePassword(request):
             print(e)
 
         if user_mobile_instance.otp == int(get_otp):
-            get_user_object = User.objects.get(username=mobile,)
+            get_user_object = User.objects.get(username=mobile, )
             get_user_object.password = password1
             get_user_object.save()
             return HttpResponseRedirect('/login/')
         else:
             print ('Wrong OTP')
             return HttpResponseRedirect('/changePassword/')
-
