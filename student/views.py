@@ -13,21 +13,61 @@ from student.models import user_data, user_otp
 def register(request):
     if request.method == 'GET':
         return render(request, "register.html")
+
     if request.method == 'POST':
         name = request.POST.get('name')
         mobile = request.POST.get('mobile')
         password = request.POST.get('password')
-        user_data.objects.create(
-            username=name,
-            mobile=mobile,
-            password=password
-        )
-        User.objects.create(
-            username=str(mobile),
-            password=str(password),
-        )
-        json = {'result': True}
-        return JsonResponse(json)
+        print (name)
+        print (mobile)
+        print (password)
+        if User.objects.filter(username=mobile, password=password).exists():
+            print ("registers if part")
+            print ("user Already Exist")
+            return render(request, "register.html", {'result': False})
+        else:
+            otp = random.randint(10000, 99999)
+            print (otp)
+            request.session['name'] = name
+            request.session['mobile'] = mobile
+            request.session['password'] = password
+            request.session['otp'] = otp
+            json = {'result': True}
+            return JsonResponse(json)
+
+
+@csrf_exempt
+def verify_register(request):
+    if request.method == 'GET':
+        return render(request, "verify_register.html")
+
+    if request.method == 'POST':
+        register_otp = request.POST.get('register_otp')
+        print ('register_otp')
+        print (register_otp)
+        name = request.session['name']
+        mobile = request.session['mobile']
+        password = request.session['password']
+        otp = request.session['otp']
+        print (name)
+        print (mobile)
+        print (password)
+        print (otp)
+        if otp == int(register_otp):
+            user_data.objects.create(
+                username=name,
+                mobile=mobile,
+                password=password
+            )
+            User.objects.create(
+                username=str(mobile),
+                password=str(password),
+            )
+            print ('verification successful')
+            return HttpResponseRedirect('/login/')
+        else:
+            print ('inside verify_register else')
+        return render(request, "verify_register.html", {'err': True})
 
 
 @csrf_exempt
@@ -38,17 +78,20 @@ def login_check(request):
     if request.method == 'POST':
         mobile = request.POST.get('user_mobile')
         password = request.POST.get('user_password')
-    try:
-        get_user_data = User.objects.get(username=mobile, password=password)
-        request.session['mobile'] = 'mobile'
-        session_mobile = request.session[mobile]
-    except Exception as e:
-        print (e)
-    if User.objects.filter(username=mobile, password=password).exists():
-        login(request, get_user_data)
-        return HttpResponseRedirect('/home/')
-    else:
-        return HttpResponseRedirect('/login/')  # @csrf_exempt
+        print (mobile)
+        print (password)
+        try:
+            if User.objects.filter(username=mobile, password=password).exists():
+                get_user_data = User.objects.get(username=mobile, password=password)
+                login(request, get_user_data)
+                print ('inside if')
+                return HttpResponseRedirect('/home/')
+            else:
+                print ('inside else part')
+                return render(request, "login.html", {'err': True})
+        except Exception as e:
+            print (e)
+            return HttpResponseRedirect('/login/')  # @csrf_exempt
 
 
 def log_out(request):
@@ -61,7 +104,10 @@ def log_out(request):
 def home(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            return render(request, "home.html")
+            user_mobile = request.user
+            get_user_name = user_data.objects.get(mobile=str(user_mobile))
+            user_name = get_user_name.username
+            return render(request, "home.html", {'user_name': user_name})
         else:
             return HttpResponseRedirect('/login/')
 

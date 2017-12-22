@@ -4,13 +4,18 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+<script type="text/javascript">
+        {% if user_name %}
+        {% endif %}
+    </script>
 </head><body>
 <nav>
     <div class="nav-wrapper blue-grey darken-4">
-      <a href="#" class="brand-logo">Logo</a>
+      <a href="#" class="brand-logo"> <img class="responsive-img" style="width: 80px;height: 100%;" src="https://avatars0.githubusercontent.com/u/20111163?s=200&v=4" /></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="sass.html">Sass</a></li>
-        <li><a href="badges.html">Components</a></li>
+        <li>Hello</li>
+        <li><a href="badges.html" style="color: #e91e63;">{{ user_name }}</a></li>
         <li><a href="/logout/">Logout</a></li>
       </ul>
     </div>

@@ -3,6 +3,11 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <script type="text/javascript">
+        {% if err %}
+            alert('Invalid user mobile number or password')
+        {% endif %}
+    </script>
 </head><body>
 <main>
     <center>
@@ -20,29 +25,29 @@
                     </div>
                     <div class='row'>
                         <div class='input-field col s12'>
-                           <input id="user_mobile" name="user_mobile" type="text" class="validate" required>
-                <label for="user_name">Mobile number</label>
+                            <input id="user_mobile" name="user_mobile" type="text" class="validate" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                            <label for="user_name">Mobile number</label>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='input-field col s12'>
-                <input id="user_password" name="user_password" type="password" class="validate" required>
-                <label for="password">Password</label>
+                            <input id="user_password" name="user_password" type="password" class="validate" required>
+                            <label for="password">Password</label>
                         </div>
                     </div>
                     <br />
                     <center>
                         <div class='row'>
-                           <button id="button" type="submit" class="btn" >LOGIN</button>
+                            <button id="button" type="submit" class="btn" >LOGIN</button>
                         </div>
                     </center>
                 </form>
-                 <br />
-                    <center>
-                        <div class='row'>&nbsp;&nbsp;&nbsp;<a href="/">Create account</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="/forgetPass/">Forget password</a>
-                        </div>
-                    </center>
+                <br />
+                <center>
+                    <div class='row'>&nbsp;&nbsp;&nbsp;<a href="/">Create account</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="/forgetPass/">Forget password</a>
+                    </div>
+                </center>
             </div>
         </div>
     </center>

@@ -37,14 +37,14 @@
 <div class="section"></div>
 <main>
     <center>
-        <img class="responsive-img" style="width: 250px;" src="https://bengreenfieldfitness.com/wp-content/uploads/2014/02/reset.png" />
+        <img class="responsive-img" style="width: 250px;" src="https://themerkle.com/wp-content/uploads/verify-logo.png" />
         <div class="section"></div>
 
 
         <div class="container">
             <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
 
-                <form class="col s12" method="post" >{% csrf_token %}
+                <form class="col s12" method="post">{% csrf_token %}
                     <div class='row'>
                         <div class='col s12'>
                         </div>
@@ -52,14 +52,14 @@
 
                     <div class='row'>
                         <div class='input-field col s12'>
-                            <input id="user_mobile" name="user_mobile" type="text" class="validate" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
-                            <label for="user_mobile">Mobile number</label>
+                            <input id="register_otp" name="register_otp" type="text" class="validate" maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                            <label for="register_otp">Enter register verification OTP</label>
                         </div>
                     </div>
                     <br />
                     <center>
                         <div class='row'>
-                            <button id="button" type="button" class="btn" onclick="send_otp()" >GENERATE OTP</button>
+                            <button id="button" type="submit" class="btn" >VERIFY REGISTRATION</button>
                         </div>
                     </center>
                 </form>
@@ -74,25 +74,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
 <script>
-    function send_otp()
-    {
-        var get_mobile = document.getElementById('user_mobile').value;
-        console.log(get_mobile)
-        $.ajax({
-            type: 'POST',
-            url: '/forgetPass/',
-            data: {'mobile': get_mobile,},
-            success:function (result) {
-                if(result.response==true){
-                    window.location.href = "/changePassword/";
-                }
-                else {
-                    alert('User Not Found');
-                    window.location.href = "/forgetPass/";
-                }
-            }
-        });
-    }
+
 </script>
 </body>
 
